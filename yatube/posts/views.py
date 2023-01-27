@@ -5,9 +5,19 @@ from django.template import loader
 # Create your views here.
 def index(request):    
     #return HttpResponse('Главная страница')
-
     template = 'posts/index.html'
-    return render(request, template)
+    title = 'Yatube'
+    context = {
+        'title': title,
+        'text' : 'Это главная страница проекта Yatube'
+    }
+    return render(request, template, context)
 
 def group_posts(request, slug):
-    return HttpResponse(f'Неглавная страница {slug}')
+    template = 'posts/group_list.html'
+    title = 'Yatube'
+    context = {
+        'title': title,
+        'text' : 'Здесь будет информацию о группах проекта Yatube'
+    }
+    return render(request, template, context)
