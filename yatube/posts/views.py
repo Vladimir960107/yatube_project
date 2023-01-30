@@ -1,23 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
 # Create your views here.
-def index(request):    
-    #return HttpResponse('Главная страница')
-    template = 'posts/index.html'
-    title = 'Yatube'
+from .models import Post
+from .models import Group
+
+def index(request):
+    # Одна строка вместо тысячи слов на SQL:
+    # в переменную posts будет сохранена выборка из 10 объектов модели Post,
+    # отсортированных по полю pub_date по убыванию (от больших значений к меньшим)
+    posts = Post.objects.order_by('-pub_date')[:10]
+    # В словаре context отправляем информацию в шаблон
     context = {
-        'title': title,
-        'text' : 'Это главная страница проекта Yatube'
+        'posts': posts,
     }
-    return render(request, template, context)
+    return render(request, 'posts/index.html', context) 
 
 def group_posts(request, slug):
-    template = 'posts/group_list.html'
-    title = 'Yatube'
+    group = get_object_or_404(Group,slug=slug)
+    posts = Post.objects.filter(group=group).order_by('-pub_date')[:10]
     context = {
-        'title': title,
-        'text' : 'Здесь будет информацию о группах проекта Yatube'
+        'group': group,
+        'posts' : posts
     }
-    return render(request, template, context)
+    return render(request, 'posts/group_list.html', context)

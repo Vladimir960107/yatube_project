@@ -1,8 +1,25 @@
 {% extends 'base.html' %}
-{% block title %}
-  {{ title }}
-{% endblock %}
-
+{% block title %} {{ title }} {% endblock title %}
 {% block content %}
-  {{ text }}
-{% endblock %}
+<div class="container py-2"></div>
+<p>
+  <h1>{{ group.title }}</h1>
+</p>
+  {%for post in posts%}
+  <article>
+    <ul>
+      <li>
+        Автор: {{ post.author.get_full_name }}
+      </li>
+      <li>
+        Дата публикации: {{ post.pub_date|date:"d E Y" }}
+      </li>
+    </ul>      
+    <p>{{ post.text }}</p> 
+    {% if post.group %} 
+      <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы</a>
+    {% endif %}
+    {% if not forloop.last%}<hr> {% endif %}
+  </article>  
+  {% endfor %}
+{% endblock content %}
